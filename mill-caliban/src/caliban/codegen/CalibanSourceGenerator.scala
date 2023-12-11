@@ -17,7 +17,9 @@ object CalibanSourceGenerator {
     val relativePath = settings.packageName.fold(sourcePath.subRelativeTo(graphqlFile)) { pkg =>
       os.SubPath(pkg.split('.').toIndexedSeq)
     }
-    destPath / relativePath / (graphqlFile.baseName.stripSuffix(".graphql") + ".scala")
+    val clientName   = settings.clientName.getOrElse(graphqlFile.baseName.stripSuffix(".graphql"))
+    val scalaName    = clientName + ".scala"
+    destPath / relativePath / scalaName
   }
 
   def collectSettingsFor(fileSettings: Seq[CalibanFileSettings], source: os.RelPath): Seq[CalibanFileSettings] = {

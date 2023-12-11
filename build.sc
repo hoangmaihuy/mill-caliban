@@ -1,9 +1,11 @@
+import $ivy.`com.lihaoyi::mill-contrib-buildinfo:`
 import $ivy.`de.tototec::de.tobiasroeser.mill.integrationtest::0.7.1`
 import $ivy.`io.chris-kipp::mill-ci-release::0.1.9`
 
 import mill._
 import mill.scalalib._
 import mill.scalalib.publish._
+import mill.contrib.buildinfo._
 import mill.scalalib.api.ZincWorkerUtil.scalaNativeBinaryVersion
 
 import de.tobiasroeser.mill.integrationtest._
@@ -21,7 +23,7 @@ object Versions {
   lazy val caliban = "2.4.3"
 }
 
-object `mill-caliban` extends ScalaModule with CiReleaseModule {
+object `mill-caliban` extends ScalaModule with CiReleaseModule with BuildInfo {
 
   override def scalaVersion = Versions.scala
 
@@ -51,8 +53,15 @@ object `mill-caliban` extends ScalaModule with CiReleaseModule {
   )
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
-    ivy"com.github.ghostdogpr::caliban-tools:${Versions.caliban}",
+    ivy"com.github.ghostdogpr::caliban-tools:${Versions.caliban}"
   )
+
+  override def buildInfoMembers = Seq(
+    BuildInfo.Value("calibanVersion", Versions.caliban)
+  )
+
+  override def buildInfoObjectName = "CalibanBuildInfo"
+  override def buildInfoPackageName = "io.github.hoangmaihuy.mill.caliban"
 
 }
 
@@ -65,8 +74,8 @@ object itest extends MillIntegrationTestModule {
   def testBase = millSourcePath / "src"
 
   override def testInvocations = Seq(
-    PathRef(testBase / "example") -> Seq(
-      TestInvocation.Targets(Seq("generateTypescript"))
+    PathRef(testBase / "codegen") -> Seq(
+      TestInvocation.Targets(Seq("compile"))
     )
   )
 
