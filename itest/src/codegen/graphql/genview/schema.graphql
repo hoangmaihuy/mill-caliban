@@ -1,0 +1,123 @@
+# Schema
+schema {
+    query: Q
+}
+
+# Query
+type Q {
+    # nested object type
+    characters: [Character!]!
+    # nested object type with argument
+    character(name: String!): Character
+
+    # default arguments for optional and list arguments
+    characters2(
+        first: Int!
+        last: Int
+        origins: [String]!
+    ): String
+
+    testJson: Json!
+
+    # test for scala.Option / Option conflicts
+    defaultOptionForProductId(id: String!): Option
+    availableOptionsForProductId(id: String!): [Option!]
+}
+
+# Input object
+input CharacterInput {
+    name: String!
+    nicknames: [String!]!
+    nicknames2: [String]!
+    nicknames3: [String!]
+    nicknames4: [String]
+
+    # reserved name
+    wait: String!
+}
+
+# Object
+type Character {
+    name: String!
+    nicknames: [String!]!
+
+    # reserved name
+    type: String!
+
+    # enum
+    origin: Origin
+
+    # union
+    role: Role
+
+    # Deprecated field + comment
+    oldName: String! @deprecated(reason: "blah")
+    oldNicknames: [String!]! @deprecated
+    # Deprecated field + comment newline
+    oldName2: String! @deprecated(reason: "foo\nbar")
+}
+
+# Enum
+enum Origin {
+    EARTH
+    MARS
+    BELT
+}
+
+# Regression test for a conflict with SelectionBuilder.Field (#917)
+enum Field {
+    name
+    nicknames
+    origin
+}
+
+# Union
+union Role = Captain | Pilot
+type Captain {
+    shipName: String!
+}
+type Pilot {
+    shipName: String!
+}
+
+# Json
+scalar Json
+
+# Big type to ensure correct handling of types with the number of fields larger than tuple max of 22 for Scala 2.x
+type Big {
+    field1: Character!
+    field2: Character!
+    field3: Character!
+    field4: Character!
+    field5: Character!
+    field6: Character!
+    field7: Character!
+    field8: Character!
+    field9: Character!
+    field10: Character!
+    field11: Character!
+    field12: Character!
+    field13: Character!
+    field14: Character!
+    field15: Character!
+    field16: Character!
+    field17: Character!
+    field18: Character!
+    field19: Character!
+    field20: Character!
+    field21: Character!
+    field22: Character!
+    field23: Character!
+}
+
+# A type that could conflict with scala.Option
+type Option {
+    defaultColor: String!
+}
+type Product {
+    id: String
+    defaultOption: Option!
+    configuredOption: Option
+    availableOptions: [Option!]!
+    specialOrderOption: [Option]
+}
