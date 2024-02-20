@@ -10,7 +10,8 @@ object codegen extends RootModule with CalibanSourceGenModule {
   override def scalaVersion = "3.3.1"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
-    ivy"com.github.ghostdogpr::caliban-client:${CalibanBuildInfo.calibanVersion}"
+    ivy"com.github.ghostdogpr::caliban-client:${CalibanBuildInfo.calibanVersion}",
+    ivy"com.github.ghostdogpr::caliban:${CalibanBuildInfo.calibanVersion}"
   )
 
   override def calibanFileSettings = Seq(
