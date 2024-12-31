@@ -1,6 +1,6 @@
 import $ivy.`com.lihaoyi::mill-contrib-buildinfo:`
 import $ivy.`de.tototec::de.tobiasroeser.mill.integrationtest::0.7.1`
-import $ivy.`io.chris-kipp::mill-ci-release::0.1.10`
+import $ivy.`io.chris-kipp::mill-ci-release::0.2.0`
 
 import mill._
 import mill.scalalib._
@@ -20,7 +20,7 @@ def millVersion = T {
 
 object Versions {
   lazy val scala = "2.13.15"
-  lazy val caliban = "2.9.0"
+  lazy val caliban = "2.9.1"
 }
 
 object `mill-caliban` extends ScalaModule with CiReleaseModule with BuildInfo {
