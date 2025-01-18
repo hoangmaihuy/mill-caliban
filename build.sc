@@ -19,7 +19,7 @@ def millVersion = T {
 }
 
 object Versions {
-  lazy val scala = "2.13.15"
+  lazy val scala = "2.13.16"
   lazy val caliban = "2.9.1"
 }
 
