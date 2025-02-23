@@ -20,7 +20,7 @@ def millVersion = T {
 
 object Versions {
   lazy val scala = "2.13.15"
-  lazy val caliban = "2.9.1"
+  lazy val caliban = "2.9.2"
 }
 
 object `mill-caliban` extends ScalaModule with CiReleaseModule with BuildInfo {
