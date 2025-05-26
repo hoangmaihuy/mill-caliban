@@ -1,0 +1,72 @@
+//| mvnDeps:
+//| - com.lihaoyi::mill-contrib-buildinfo:$MILL_VERSION
+//| - com.lihaoyi::mill-contrib-artifactory:$MILL_VERSION
+
+import mill.*
+import mill.scalalib.*
+import mill.scalalib.publish.*
+import mill.contrib.buildinfo.*
+import mill.main.VcsVersion
+
+object Versions {
+  lazy val scala = "3.7.0"
+  lazy val caliban = "2.10.0"
+  lazy val millVersion = mill.util.BuildInfo.millVersion
+  lazy val millBinPlatform = mill.util.BuildInfo.millBinPlatform
+}
+
+object `mill-caliban` extends ScalaModule with SonatypeCentralPublishModule with BuildInfo {
+
+  override def scalaVersion = Versions.scala
+
+  override def versionScheme: T[Option[VersionScheme]] = Task(Option(VersionScheme.EarlySemVer))
+
+  override def pomSettings = PomSettings(
+    description = "Caliban codegen plugin for Mill",
+    organization = "io.github.hoangmaihuy",
+    url = "https://github.com/hoangmaihuy/mill-caliban",
+    licenses = Seq(License.`Apache-2.0`),
+    versionControl = VersionControl.github(owner = "hoangmaihuy", repo = "mill-caliban"),
+    developers = Seq(Developer("hoangmaihuy", "Hoang Mai", "https://github.com/hoangmaihuy"))
+  )
+
+  override def artifactName = "mill-caliban"
+
+  override def artifactSuffix = "_mill" + Versions.millBinPlatform + super.artifactSuffix()
+
+  override def publishVersion = VcsVersion.vcsState().format(untaggedSuffix = "-SNAPSHOT")
+
+  override def scalacOptions = Seq("-Wunused:all", "-deprecation")
+
+  override def compileMvnDeps = super.compileMvnDeps() ++ Seq(
+    mvn"com.lihaoyi::mill-libs-scalalib:${Versions.millVersion}"
+  )
+
+  override def mvnDeps = super.mvnDeps() ++ Seq(
+    mvn"com.github.ghostdogpr::caliban-tools:${Versions.caliban}"
+  )
+
+  override def buildInfoMembers = Seq(
+    BuildInfo.Value("calibanVersion", Versions.caliban)
+  )
+
+  override def buildInfoObjectName = "CalibanBuildInfo"
+  override def buildInfoPackageName = "io.github.hoangmaihuy.mill.caliban"
+
+}
+
+//object itest extends MillIntegrationTestModule {
+//
+//  override def millTestVersion = millVersion
+//
+//  override def pluginsUnderTest = Seq(`mill-caliban`)
+//
+//  def testBase = millSourcePath / "src"
+//
+//  override def testInvocations = Seq(
+//    PathRef(testBase / "codegen") -> Seq(
+//      TestInvocation.Targets(Seq("compile"))
+//    )
+//  )
+//
+//}

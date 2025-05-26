@@ -36,10 +36,10 @@ jobs:
           distribution: temurin
 
       - name: Check publishing local
-        run: ./millw -i __.publishLocal $(pwd)/testRepo
+        run: ./mill -i __.publishLocal $(pwd)/testRepo
 
       - name: Test
-        run: ./millw -i -k __.test
+        run: ./mill -i -k __.test
 
   publish:
     name: Publish to Maven Central
@@ -61,7 +61,7 @@ jobs:
           distribution: temurin
 
       - name: Publish to Maven Central
-        run: ./millw -i io.kipp.mill.ci.release.ReleaseModule/publishAll
+        run: ./mill -i io.kipp.mill.ci.release.ReleaseModule/publishAll
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}

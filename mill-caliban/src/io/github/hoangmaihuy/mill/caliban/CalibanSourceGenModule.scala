@@ -8,10 +8,12 @@ import zio.{Unsafe, ZIO}
 trait CalibanSourceGenModule extends ScalaModule {
 
   override def generatedSources = super.generatedSources() ++ calibanGenSources()
-  def calibanSourcePath: T[PathRef] = T.source(millSourcePath / "graphql")
-  def calibanFileSettings: T[Seq[CalibanFileSettings]] = T(Seq.empty[CalibanFileSettings])
 
-  def calibanGenSources = T {
+  def calibanSourcePath: Task[PathRef] = Task.Source(moduleDir / "graphql")
+
+  def calibanFileSettings: Task[Seq[CalibanFileSettings]] = Task(Seq.empty[CalibanFileSettings])
+
+  def calibanGenSources = Task {
     val calibanPath = calibanSourcePath().path
     val fileSettings = calibanFileSettings()
     val calibanSources = Lib.findSourceFiles(Seq(calibanSourcePath()), Seq("graphql")).sorted
@@ -20,12 +22,12 @@ trait CalibanSourceGenModule extends ScalaModule {
         .run {
           ZIO
             .foreach(calibanSources) { source =>
-              T.log.info(s"Generating caliban source for $source")
+              Task.log.info(s"Generating caliban source for $source")
               ZIO
                 .foreach(CalibanSourceGenerator.collectSettingsFor(fileSettings, source.relativeTo(calibanPath))) { s =>
                   CalibanSourceGenerator.generateFileSource(
                     calibanSourcePath().path,
-                    T.dest,
+                    Task.dest,
                     source,
                     s.settings
                   )
@@ -33,8 +35,8 @@ trait CalibanSourceGenModule extends ScalaModule {
                 .catchAll {
                   case Some(reason) =>
                     ZIO.succeed {
-                      T.log.error(reason.toString)
-                      T.log.error(reason.getStackTrace.mkString("\n"))
+                      Task.log.error(reason.toString)
+                      Task.log.error(reason.getStackTrace.mkString("\n"))
                       List.empty
                     }
                   case None => ZIO.succeed(List.empty)
@@ -45,7 +47,7 @@ trait CalibanSourceGenModule extends ScalaModule {
         }
         .getOrThrowFiberFailure()
     }
-    Seq(PathRef(T.dest))
+    Seq(PathRef(Task.dest))
   }
 
 }
