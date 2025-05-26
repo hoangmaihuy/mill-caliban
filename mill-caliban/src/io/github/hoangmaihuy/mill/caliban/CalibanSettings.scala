@@ -40,14 +40,14 @@ final case class CalibanCommonSettings(
 
   def withClientName(clientName: String): CalibanCommonSettings = this.copy(clientName = Some(clientName))
   def withScalafmtPath(scalafmtPath: String): CalibanCommonSettings = this.copy(scalafmtPath = Some(scalafmtPath))
-  def withHeaders(headers: Seq[(String, String)]): CalibanCommonSettings = this.copy(headers = headers)
+  def withHeaders(headers: (String, String)*): CalibanCommonSettings = this.copy(headers = headers)
   def withPackageName(packageName: String): CalibanCommonSettings = this.copy(packageName = Some(packageName))
   def withGenView(genView: Boolean): CalibanCommonSettings = this.copy(genView = Some(genView))
 
-  def withScalarMappings(scalarMappings: Seq[(String, String)]): CalibanCommonSettings =
+  def withScalarMappings(scalarMappings: (String, String)*): CalibanCommonSettings =
     this.copy(scalarMappings = scalarMappings)
 
-  def withImports(imports: Seq[String]): CalibanCommonSettings = this.copy(imports = imports)
+  def withImports(imports: String*): CalibanCommonSettings = this.copy(imports = imports)
   def withSplitFiles(splitFiles: Boolean): CalibanCommonSettings = this.copy(splitFiles = Some(splitFiles))
   def withEnableFmt(enableFmt: Boolean): CalibanCommonSettings = this.copy(enableFmt = Some(enableFmt))
 

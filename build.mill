@@ -7,15 +7,16 @@ import mill.scalalib.*
 import mill.scalalib.publish.*
 import mill.contrib.buildinfo.*
 import mill.main.VcsVersion
+import mill.util.BuildInfo.{millVersion, millBinPlatform}
 
 object Versions {
   lazy val scala = "3.7.0"
   lazy val caliban = "2.10.0"
-  lazy val millVersion = mill.util.BuildInfo.millVersion
-  lazy val millBinPlatform = mill.util.BuildInfo.millBinPlatform
 }
 
 object `mill-caliban` extends ScalaModule with SonatypeCentralPublishModule with BuildInfo {
+
+  override def publishVersion = "0.3.0-RC1"
 
   override def scalaVersion = Versions.scala
 
@@ -32,14 +33,12 @@ object `mill-caliban` extends ScalaModule with SonatypeCentralPublishModule with
 
   override def artifactName = "mill-caliban"
 
-  override def artifactSuffix = "_mill" + Versions.millBinPlatform + super.artifactSuffix()
-
-  override def publishVersion = VcsVersion.vcsState().format(untaggedSuffix = "-SNAPSHOT")
+  override def platformSuffix = s"_mill$millBinPlatform"
 
   override def scalacOptions = Seq("-Wunused:all", "-deprecation")
 
   override def compileMvnDeps = super.compileMvnDeps() ++ Seq(
-    mvn"com.lihaoyi::mill-libs-scalalib:${Versions.millVersion}"
+    mvn"com.lihaoyi::mill-libs-scalalib:$millVersion"
   )
 
   override def mvnDeps = super.mvnDeps() ++ Seq(
@@ -53,20 +52,31 @@ object `mill-caliban` extends ScalaModule with SonatypeCentralPublishModule with
   override def buildInfoObjectName = "CalibanBuildInfo"
   override def buildInfoPackageName = "io.github.hoangmaihuy.mill.caliban"
 
-}
+  // Testing Config, with necessary setup for unit/integration/example tests
+  object test extends ScalaTests with TestModule.Utest {
+    def mvnDeps = Seq(mvn"com.lihaoyi::mill-testkit:$millVersion")
 
-//object itest extends MillIntegrationTestModule {
-//
-//  override def millTestVersion = millVersion
-//
-//  override def pluginsUnderTest = Seq(`mill-caliban`)
-//
-//  def testBase = millSourcePath / "src"
-//
-//  override def testInvocations = Seq(
-//    PathRef(testBase / "codegen") -> Seq(
-//      TestInvocation.Targets(Seq("compile"))
-//    )
-//  )
-//
-//}
+    def forkEnv = Task {
+      val p = Task.dest / "mill/local-test-overrides" / s"com.lihaoyi-${`mill-caliban`.artifactId()}"
+      os.write(
+        p,
+        `mill-caliban`.localClasspath().map(_.path).mkString("\n"),
+        createFolders = true
+      )
+      Map(
+        "MILL_EXECUTABLE_PATH" -> millExecutable.assembly().path.toString,
+        "MILL_LOCAL_TEST_OVERRIDE_CLASSPATH" ->
+          (sys.env.get("MILL_LOCAL_TEST_OVERRIDE_CLASSPATH") ++ Seq(Task.dest)).mkString(";")
+      )
+    }
+
+    // Create a Mill executable configured for testing our plugin
+    object millExecutable extends JavaModule {
+      def mvnDeps = Seq(mvn"com.lihaoyi:mill-runner-launcher_3:$millVersion")
+
+      def mainClass = Some("mill.launcher.MillLauncherMain")
+    }
+
+  }
+
+}
