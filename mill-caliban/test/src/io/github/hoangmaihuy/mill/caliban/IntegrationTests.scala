@@ -19,9 +19,9 @@ object IntegrationTests extends TestSuite {
       )
 
       val res = tester.eval("codegen.compile")
-      println(res.out)
       println(res.err)
       assert(res.isSuccess)
+      assert(res.err.contains("Generating caliban source"))
     }
   }
 }
