@@ -37,6 +37,8 @@ jobs:
           distribution: temurin
 
       - name: Check publishing local
+        env:
+          MILL_TEST_MODE: true
         run: ./mill -i __.publishLocal
 
       - name: Test
