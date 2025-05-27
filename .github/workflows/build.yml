@@ -62,7 +62,7 @@ jobs:
           distribution: temurin
 
       - name: Publish to Maven Central
-        run: ./mill mill.scalalib.SonatypeCentralPublishModule
+        run: ./mill __.publishSonatypeCentral
         env:
           MILL_PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           MILL_PGP_SECRET_BASE64: ${{ secrets.PGP_SECRET }}
