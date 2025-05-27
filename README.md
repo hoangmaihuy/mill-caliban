@@ -13,7 +13,7 @@ import caliban.tools.Codegen
 
 object codegen extends ScalaModule with CalibanSourceGenModule {
 
-  override def scalaVersion = "3.3.1"
+  override def scalaVersion = "3.7.0"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     ivy"com.github.ghostdogpr::caliban-client:${CalibanBuildInfo.calibanVersion}"
@@ -23,17 +23,17 @@ object codegen extends ScalaModule with CalibanSourceGenModule {
   override def calibanFileSettings = Seq(
     // Explicitly constrain to disambiguate
     CalibanFileSettings.forFile(os.rel / "schema.graphql")(
-      _.clientName("Client")
+      _.withClientName("Client")
     ),
     // Another entry for the same file, which will cause another generator to run
     CalibanFileSettings.forFile(os.rel / "schema.graphql")(
-      _.genType(Codegen.GenType.Schema)
-        .scalarMapping("Json" -> "String")
-        .effect("scala.util.Try")
-        .addDerives(false)
+      _.withGenType(Codegen.GenType.Schema)
+        .withScalarMappings("Json" -> "String")
+        .withEffect("scala.util.Try")
+        .withAddDerives(false)
     ),
     CalibanFileSettings.forFile(os.rel / "genview" / "schema.graphql")(
-      _.clientName("Client").packageName("genview").genView(true)
+      _.withClientName("Client").withPackageName("genview").withGenView(true)
     )
   )
 
