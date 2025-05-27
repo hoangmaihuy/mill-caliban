@@ -1,5 +1,5 @@
 //| mvnDeps:
-//| - io.github.hoangmaihuy::mill-caliban::0.3.0-RC1
+//| - io.github.hoangmaihuy::mill-caliban::test
 
 import mill.*
 import mill.scalalib.*

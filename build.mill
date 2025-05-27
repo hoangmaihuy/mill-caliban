@@ -16,7 +16,17 @@ object Versions {
 
 object `mill-caliban` extends ScalaModule with SonatypeCentralPublishModule with BuildInfo {
 
-  override def publishVersion = "0.3.0-RC1"
+  def isTesting: T[Boolean] = Task.Input {
+    Task.env.get("MILL_TEST_MODE").exists(_.toBoolean)
+  }
+
+  override def publishVersion = Task {
+    if (isTesting()) {
+      "test"
+    } else {
+      VcsVersion.vcsState().format()
+    }
+  }
 
   override def scalaVersion = Versions.scala
 
