@@ -1,8 +1,8 @@
 package io.github.hoangmaihuy.mill.caliban
 
 import caliban.codegen.CalibanSourceGenerator
-import mill._
-import mill.scalalib._
+import mill.*
+import mill.scalalib.*
 import zio.{Unsafe, ZIO}
 
 trait CalibanSourceGenModule extends ScalaModule {
@@ -14,7 +14,7 @@ trait CalibanSourceGenModule extends ScalaModule {
   def calibanFileSettings: Task[Seq[CalibanFileSettings]] = Task(Seq.empty[CalibanFileSettings])
 
   def calibanGenSources = Task {
-    mill.define.BuildCtx.withFilesystemCheckerDisabled {
+    mill.api.BuildCtx.withFilesystemCheckerDisabled {
       val calibanPath = calibanSourcePath().path
       val fileSettings = calibanFileSettings()
       val calibanSources = Lib.findSourceFiles(Seq(calibanSourcePath()), Seq("graphql")).sorted
