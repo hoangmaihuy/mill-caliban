@@ -4,19 +4,20 @@
 ## Installation
 
 ```scala
-import $ivy.`io.github.hoangmaihuy::mill-caliban::<latest-version>`
+//| mvnDeps:
+//| - io.github.hoangmaihuy::mill-caliban::<latest-version>
 
-import mill._
-import mill.scalalib._
-import io.github.hoangmaihuy.mill.caliban._
+import mill.*
+import mill.scalalib.*
+import io.github.hoangmaihuy.mill.caliban.*
 import caliban.tools.Codegen
 
 object codegen extends ScalaModule with CalibanSourceGenModule {
 
   override def scalaVersion = "3.7.0"
 
-  override def ivyDeps = super.ivyDeps() ++ Agg(
-    ivy"com.github.ghostdogpr::caliban-client:${CalibanBuildInfo.calibanVersion}"
+  override def mvnDeps = super.mvnDeps() ++ Seq(
+    mvn"com.github.ghostdogpr::caliban-client:${CalibanBuildInfo.calibanVersion}"
   )
 
   // Optional configurations, below examples are taken from itest build.sc
