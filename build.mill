@@ -6,7 +6,7 @@ import mill.*
 import mill.scalalib.*
 import mill.scalalib.publish.*
 import mill.contrib.buildinfo.*
-import mill.main.VcsVersion
+import mill.util.VcsVersion
 import mill.util.BuildInfo.{millVersion, millBinPlatform}
 
 object Versions {
