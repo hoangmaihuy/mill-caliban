@@ -2,7 +2,7 @@ package caliban.codegen
 
 import java.io.File
 
-import caliban.tools.Codegen
+import caliban.codegen.Codegen
 import zio.{IO, ZIO}
 
 import io.github.hoangmaihuy.mill.caliban.{CalibanFileSettings, CalibanCommonSettings}
