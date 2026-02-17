@@ -24,4 +24,5 @@ object IntegrationTests extends TestSuite {
       assert(res.err.contains("Generating caliban source"))
     }
   }
+
 }
