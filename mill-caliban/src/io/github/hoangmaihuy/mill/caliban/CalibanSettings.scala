@@ -1,6 +1,7 @@
 package io.github.hoangmaihuy.mill.caliban
 
-import caliban.tools.Options
+import caliban.codegen.Options
+import caliban.tools.Header
 import upickle.default.ReadWriter
 
 enum CalibanGenType derives ReadWriter {
@@ -9,9 +10,9 @@ enum CalibanGenType derives ReadWriter {
 
 object CalibanGenType {
 
-  given Conversion[CalibanGenType, caliban.tools.Codegen.GenType] = {
-    case CalibanGenType.Schema => caliban.tools.Codegen.GenType.Schema
-    case CalibanGenType.Client => caliban.tools.Codegen.GenType.Client
+  given Conversion[CalibanGenType, caliban.codegen.Codegen.GenType] = {
+    case CalibanGenType.Schema => caliban.codegen.Codegen.GenType.Schema
+    case CalibanGenType.Client => caliban.codegen.Codegen.GenType.Client
   }
 
 }
@@ -80,7 +81,7 @@ final case class CalibanCommonSettings(
       schemaPath = schemaPath,
       toPath = toPath,
       fmtPath = scalafmtPath,
-      headers = Option(headers.map((Options.Header.apply).tupled).toList).filter(_.nonEmpty),
+      headers = Option(headers.map((Header.apply).tupled).toList).filter(_.nonEmpty),
       packageName = packageName,
       clientName = clientName,
       genView = genView,
