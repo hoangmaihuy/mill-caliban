@@ -10,7 +10,7 @@ import mill.util.VcsVersion
 import mill.util.BuildInfo.{millVersion, millBinPlatform}
 
 object Versions {
-  lazy val scala = "3.7.4"
+  lazy val scala = "3.8.1"
   lazy val caliban = "3.0.0"
 }
 
